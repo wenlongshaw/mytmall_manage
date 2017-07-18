@@ -3,7 +3,7 @@ package com.atguigu.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
-
+//此处做了修改
 @Controller
 public class IndexController {
 	@RequestMapping("index")

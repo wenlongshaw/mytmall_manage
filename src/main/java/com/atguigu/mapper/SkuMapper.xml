@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.mapper.SkuMapper">
+
+	<select id="select_attr_list_by_class_2_id" 
+			resultMap="select_attr_list_by_class_2_id_map"
+			parameterType="Map">
+		SELECT attr.*,val.*,attr.id AS attr_id ,val.id AS value_id FROM
+		t_mall_attr attr , t_mall_value val
+		<where>
+			attr.id = val.shxm_id
+			<if test="class_2_id !=0">
+				and attr.flbh2=#{class_2_id}
+			</if>
+		</where>
+	</select>
+	<resultMap type="com.atguigu.bean.OBJECT_T_MALL_ATTR" 
+				autoMapping="true"
+				id="select_attr_list_by_class_2_id_map">
+		<result column="attr_id" property="id"/>
+		<collection property="list_value" ofType="com.atguigu.bean.T_MALL_VALUE" autoMapping="true">
+			<result column="val_id" property="id"/>
+		</collection>
+	</resultMap>
+	
+	<select id="select_spu_by_class_1_class_2_tm" parameterType="Map" resultType="com.atguigu.bean.T_MALL_PRODUCT">
+		SELECT * FROM t_mall_product WHERE
+		flbh1=#{class_1_id} AND
+		flbh2=#{class_2_id} AND
+		pp_id=#{tm_id}
+	</select>
+	
+	<insert id="insert_sku" useGeneratedKeys="true" keyColumn="id" keyProperty="id" 
+			parameterType="com.atguigu.bean.T_MALL_SKU">
+		insert into t_mall_sku(shp_id,kc,jg,sku_mch,kcdz)
+		values
+		(#{shp_id},#{kc},#{jg},#{sku_mch},#{kcdz})
+	</insert>
+	
+	<insert id="insert_sku_attr_values" parameterType="Map">
+		insert into t_mall_sku_attr_value(shxm_id,shxzh_id,shp_id,sku_id)
+		values
+		<foreach collection="list_attr_value" item="list" separator=",">
+			(#{list.shxm_id},
+			#{list.shxzh_id},
+			#{list.shp_id},
+			#{sku.id})
+		</foreach>
+	</insert>
+</mapper>
+
